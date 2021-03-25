@@ -14,7 +14,7 @@ class Vehicle extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'name', 'color', 'identical_plate', 'brand', 'year', 'state', 'city'
+        'name', 'brand', 'version',
     ];
 
     public function user(): BelongsTo
