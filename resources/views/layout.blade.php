@@ -19,7 +19,7 @@
     <footer>
 
 
-        <link rel="stylesheet" href="{{ asset('js/app.js') }}">
+        <script src="{{ asset('js/app.js') }}"></script>
         @yield('js')
     </footer>
 

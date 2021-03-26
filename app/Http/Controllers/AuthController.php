@@ -27,7 +27,7 @@ class AuthController extends Controller
             return redirect()->route('auth')->withErrors('Dados incorretos');
 
         Auth::login($user, true);
-        return redirect()->route('home')->with('pop_up', 'Bem-vindo, tenha uma boa experiência');
+        return redirect()->route('home');
     }
 
     public function register(RegisterRequest $request)
@@ -38,7 +38,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->route('auth')->with('pop_up', 'Conta criada com sucesso!');
+        return redirect()->route('auth');
     }
 
 }
