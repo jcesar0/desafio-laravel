@@ -23,10 +23,10 @@ class AuthController extends Controller
         $user = User::where('email', '=', $request->email)->first();
 
         if(!$user)
-            return redirect()->route('auth')->withErrors('Dados incorretos');
+            return redirect()->route('login')->withErrors('Dados incorretos');
 
         if (!Hash::check($request->password, $user->password))
-            return redirect()->route('auth')->withErrors('Dados incorretos');
+            return redirect()->route('login')->withErrors('Dados incorretos');
 
         Auth::login($user, true);
         return redirect()->route('home');
