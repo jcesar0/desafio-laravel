@@ -18,6 +18,8 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        if (Auth::user()) Auth::logout();
+
         $user = User::where('email', '=', $request->email)->first();
 
         if(!$user)
@@ -32,13 +34,23 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        if (Auth::user()) Auth::logout();
+
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->route('auth');
+        return redirect()->route('login');
+    }
+
+    public function logout()
+    {
+        if (!Auth::user()) return redirect()->route('home');
+
+        Auth::logout();
+        return redirect()->route('login')->withErrors('Você está deslogado faça login');
     }
 
 }
