@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'auth'
 ], function () {
-    Route::get('', [AuthController::class, 'create'])->name('login');
+    Route::get('', [AuthController::class, 'create'])->name('auth');
     Route::post('login', [AuthController::class, 'login'])->name('login_post');
     Route::post('register', [AuthController::class, 'register'])->name('register_post');
 
