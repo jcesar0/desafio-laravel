@@ -5,21 +5,17 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'prefix' => 'login'
+    'prefix' => 'auth'
 ], function () {
-    Route::get('', [LoginController::class, 'create'])->name('login');
-    Route::post('', [LoginController::class, 'login'])->name('login_post');
-});
+    Route::get('', [AuthController::class, 'create'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login_post');
+    Route::post('register', [AuthController::class, 'register'])->name('register_post');
 
-Route::group([
-    'prefix' => 'register'
-], function () {
-    Route::get('', [RegisterController::class, 'create'])->name('register');
-    Route::post('', [RegisterController::class, 'register'])->name('register_post');
 });
 
 Route::get('', [HomeController::class, 'create'])->name('home')->middleware('auth');
