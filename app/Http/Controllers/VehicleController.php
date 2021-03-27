@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\VehicleRequest;
+use App\Models\Maintenance;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class VehicleController extends Controller
 {
@@ -58,20 +60,31 @@ class VehicleController extends Controller
 
     /*
      * Verifica se existe um veiculo com id informado, se não tiver irá retornar para rota vehicle com uma msg de erro
-     * caso exista irá verificar se veiculo pertecem ao usuário, se sim irá tentar destruir,
+     * caso exista irá verificar se veiculo pertece ao usuário, se sim irá tentar destruir todas as manutenções vinculadas ao veículo e depois irá destruir o mesmo,
      * se não for irá retornar para rota vehicle com uma msg de erro
      */
     public function destroy(int $id)
     {
         if (!Vehicle::find($id)) return redirect()->route('vehicle')->withErrors('Veículo não encontrado');
 
+        /** @var Vehicle $vehicle */
         $vehicle = Auth::user()->vehicles()->find($id);
-        if ($vehicle) {
-            $vehicle->destroy($id);
+        if ($vehicle)
+        {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+                DB::beginTransaction();
+                    foreach ($vehicle->maintenances as $maintenance) {
+                        Maintenance::destroy($maintenance->id);
+                    }
+                $vehicle->destroy($id);
+                DB::commit();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
             return redirect()->route('vehicle')->with('success_alert', "Veículo {$vehicle->name} excluído com sucesso!");
         }
 
         return redirect()->route('vehicle')->withErrors('Veículo não encontrado');
     }
+
 
 }

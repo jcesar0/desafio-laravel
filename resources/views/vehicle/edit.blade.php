@@ -3,6 +3,7 @@
 @section('content')
     <div class="d-flex justify-content-center">
         <form action="{{ route('vehicle_put', ['id' => $vehicle->id]) }}" METHOD="POST">
+            <h1>Alterar veículo {{ $vehicle->name }}</h1>
             @csrf
             @method('PUT')
             <div class="form-floating mb-3 col-auto">

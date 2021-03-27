@@ -5,6 +5,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +20,7 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'vehicle',
+    'prefix' => 'vehicles',
     'middleware' => 'auth'
 ], function () {
     Route::get('', [VehicleController::class, 'create'])->name('vehicle');
@@ -28,6 +29,14 @@ Route::group([
     Route::put('{id}/edit', [VehicleController::class, 'update'])->name('vehicle_put');
 
     Route::get('{id}/edit', [VehicleController::class, 'edit'])->name('vehicleEdit');
+
+    Route::group(['prefix' => 'maintenances'], function () {
+        Route::get('{vehicleId}', [MaintenanceController::class, 'create'])->name('maintenances');
+        Route::post('{vehicleId}', [MaintenanceController::class, 'store'])->name('maintenances_post');
+        Route::delete('{vehicleId}/{maintenanceId}', [MaintenanceController::class, 'destroy'])->name('maintenances_delete');
+        Route::get('{vehicleId}/{maintenanceId}', [MaintenanceController::class, 'edit'])->name('maintenancesEdit');
+        Route::put('{vehicleId}/{maintenanceId}', [MaintenanceController::class, 'update'])->name('maintenances_put');
+    });
 
 });
 

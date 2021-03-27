@@ -21,4 +21,9 @@ class Vehicle extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function maintenances()
+    {
+        return $this->hasMany(Maintenance::class);
+    }
 }

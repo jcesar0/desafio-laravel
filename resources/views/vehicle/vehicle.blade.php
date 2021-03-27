@@ -27,19 +27,52 @@
         @foreach($vehicles as $vehicle)
             <div class="card m-2 text-center" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title">{{ $vehicle->name }}</h5>
+                    <h5 class="card-title">
+                        {{ $vehicle->name }} <span class="badge rounded-circle bg-primary">{{ $vehicle->maintenances->count() }}</span>
+                    </h5>
                     <p class="card-text">
                         <b>Marca: </b> {{ $vehicle->brand }}
                         <b>Versão: </b> {{ $vehicle->version }}
                     </p>
 
-                    <button type="submit" class="btn btn-outline-primary form-control mb-2"> Agendar manutenção </button>
-                    <a href="{{ route('vehicleEdit',  $vehicle->id) }}" class="btn btn-outline-dark form-control mb-2"> Editar </a>
+                    <a href="{{ route('maintenances', ['vehicleId' => $vehicle->id]) }}" class="btn btn-outline-primary form-control mb-2"> Agendar manutenção </a>
+                    <a href="{{ route('vehicleEdit',  $vehicle->id) }}" class="btn btn-outline-warning form-control mb-2"> Editar </a>
                     <form action="{{ route('vehicle_delete', ['id' => $vehicle->id]) }}" method="POST">
                         @method('DELETE')
                         @csrf
                         <button type="submit" class="btn btn-outline-danger form-control mb-2"> Excluir </button>
                     </form>
+                    <a class="btn btn-outline-dark form-control" data-bs-toggle="collapse" href="#collapseCard-{{$vehicle->id}}" role="button" aria-expanded="false" aria-controls="collapseCard-{{$vehicle->id}}">
+                        Ver manutenções
+                    </a>
+                </div>
+                <hr>
+                <div class="collapse" id="collapseCard-{{$vehicle->id}}">
+                    <table class="table table-striped">
+                        <thead>
+                            <th>Tipo</th>
+                            <th>Dias</th>
+                            <th>Ações</th>
+                        </thead>
+
+                        <tbody>
+                        @foreach($vehicle->maintenances as $maintenance)
+                            <tr>
+                                <td> {{ \Illuminate\Support\Str::limit($maintenance->name, 15) }} </td>
+                                <td> {{ $maintenance->days_remaining }} </td>
+                                <td>
+                                    <form action="{{ route('maintenances_delete', ['vehicleId' => $vehicle->id, 'maintenanceId' => $maintenance->id]) }}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger mb-1">EXCLUIR</button>
+                                    </form>
+                                    <a href="{{ route('maintenancesEdit', ['vehicleId' => $vehicle->id, 'maintenanceId' => $maintenance->id]) }}" class="text-decoration-none btn btn-sm btn-outline-warning">EDITAR</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @endforeach
     </div>
