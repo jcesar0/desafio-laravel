@@ -5,6 +5,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -17,4 +18,18 @@ Route::group([
 
 });
 
+Route::group([
+    'prefix' => 'vehicle',
+    'middleware' => 'auth'
+], function () {
+    Route::get('', [VehicleController::class, 'create'])->name('vehicle');
+    Route::post('', [VehicleController::class, 'store'])->name('vehicle_post');
+    Route::delete('{id}', [VehicleController::class, 'destroy'])->name('vehicle_delete');
+    Route::put('{id}/edit', [VehicleController::class, 'update'])->name('vehicle_put');
+
+    Route::get('{id}/edit', [VehicleController::class, 'edit'])->name('vehicleEdit');
+
+});
+
 Route::get('', [HomeController::class, 'create'])->name('home')->middleware('auth');
+

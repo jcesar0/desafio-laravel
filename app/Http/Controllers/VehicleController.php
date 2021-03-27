@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\VehicleRequest;
+use App\Models\User;
+use App\Models\Vehicle;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class VehicleController extends Controller
+{
+    public function create()
+    {
+        return view('vehicle.vehicle', [
+            'vehicles' => Auth::user()->vehicles->all()
+        ]);
+    }
+
+    /*
+     * Pega o usuário e cria um veiculo vinculado a conta dele
+     */
+    public function store(VehicleRequest $request)
+    {
+        Auth::user()->vehicles()->create([
+            'name' => $request->name,
+            'brand' => $request->brand,
+            'version' => $request->version
+        ]);
+
+        return redirect()->route('vehicle')->with('success_alert', 'Veículo criado com sucesso');
+    }
+
+    public function edit(int $id)
+    {
+        $vehicle = Vehicle::find($id);
+
+        if (!$vehicle) return redirect()->route('vehicle');
+
+        return view('vehicle.edit', [
+            'vehicle' => $vehicle
+        ]);
+    }
+
+    /*
+     * Será verificado se existe um veiculo com esse id nna conta do usuário, caso sim será requisitado e alterado somente os campos
+     * name, brand, version
+     */
+    public function update(int $id, VehicleRequest $request)
+    {
+        $vehicle = Auth::user()->vehicles();
+        if (!$vehicle->find($id))
+            return redirect()->route('vehicle')->withErrors('Veículo não encontrado');
+
+        $vehicle->update($request->only(['name', 'brand', '']));
+        return redirect()->route('vehicle')->with('success_alert', "Veículo alterado com sucesso");
+    }
+
+    /*
+     * Verifica se existe um veiculo com id informado, se não tiver irá retornar para rota vehicle com uma msg de erro
+     * caso exista irá verificar se veiculo pertecem ao usuário, se sim irá tentar destruir,
+     * se não for irá retornar para rota vehicle com uma msg de erro
+     */
+    public function destroy(int $id)
+    {
+        if (!Vehicle::find($id)) return redirect()->route('vehicle')->withErrors('Veículo não encontrado');
+
+        $vehicle = Auth::user()->vehicles()->find($id);
+        if ($vehicle) {
+            $vehicle->destroy($id);
+            return redirect()->route('vehicle')->with('success_alert', "Veículo {$vehicle->name} excluído com sucesso!");
+        }
+
+        return redirect()->route('vehicle')->withErrors('Veículo não encontrado');
+    }
+
+}

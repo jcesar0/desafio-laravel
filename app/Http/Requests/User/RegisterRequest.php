@@ -15,7 +15,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:80',
-            'email' => 'required|min:5|max:80',
+            'email' => 'required|min:5|max:80|unique:users',
             'password' => 'required|min:5|max:18'
         ];
     }
@@ -30,6 +30,7 @@ class RegisterRequest extends FormRequest
             'email.required' => 'O email é inválido',
             'email.min' => 'O email é inválido',
             'email.max' => 'O email é inválido',
+            'email.unique' => 'Este email já está cadastrado',
 
             'password.required' => 'Preencha o campo senha',
             'password.min' => 'A senha deve conter mais de 4 caracteres e menos de 18',
