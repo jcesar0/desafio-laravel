@@ -20,4 +20,6 @@ class Maintenance extends Model
     {
         return $this->belongsTo(Vehicle::class);
     }
+
+
 }

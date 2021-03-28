@@ -86,5 +86,12 @@ class VehicleController extends Controller
         return redirect()->route('vehicle')->withErrors('Veículo não encontrado');
     }
 
+    /*
+     * Retorna os veículos, com ele possui o atributo "week_maintenances" que informa as manutenções de 7 dias
+     */
+    public function weekMaintenances()
+    {
+        return Auth::user()->vehicles;
+    }
 
 }

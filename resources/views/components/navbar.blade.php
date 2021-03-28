@@ -9,7 +9,6 @@
                 <li class="nav-item"> <a class="nav-link" aria-current="page" href="{{ route('home') }}">Home</a> </li>
                 @auth()
                     <li class="nav-item"> <a class="nav-link" aria-current="page" href="{{ route('vehicle') }}">Carros</a> </li>
-                    <li class="nav-item"> <a class="nav-link" aria-current="page" href="#">Manutenções</a> </li>
                 @endauth
 
             </ul>
